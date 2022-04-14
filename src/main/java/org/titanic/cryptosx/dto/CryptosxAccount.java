@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
+import org.titanic.cryptosx.dto.message.payload.GetAccountPositions;
 import org.titanic.cryptosx.service.CryptosxListener;
 import org.titanic.cryptosx.gateway.ExchangeHandler;
 import org.titanic.cryptosx.dto.message.MessageFrame;
@@ -44,6 +45,10 @@ public class CryptosxAccount extends Payload {
 
     private final transient int accountId;
     private final transient String accountName;
+
+    @Setter
+    private transient double usdtBalance = 0;
+
     @Setter
     private transient AccountStatus status = AccountStatus.LOGGED_OUT;
 
@@ -72,6 +77,8 @@ public class CryptosxAccount extends Payload {
         if (subscribedToLevel2) {
             this.subscribeLevel2(Instrument.MAMIUSDT.toInteger());
         }
+
+        getAccountPositions();
 
     }
 
@@ -114,5 +121,9 @@ public class CryptosxAccount extends Payload {
 
     private void subscribeAccountEvents() {
         this.sendMessage("SubscribeAccountEvents", String.format("{\"AccountId\": %d, \"OMSId\": 1}", this.getAccountId()));
+    }
+
+    public void getAccountPositions(){
+        this.sendMessage("GetAccountPositions", new GetAccountPositions(1, this.getAccountId()));
     }
 }

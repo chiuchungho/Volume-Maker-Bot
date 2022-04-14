@@ -162,24 +162,19 @@ public class ExchangeHandlerService implements ExchangeHandler {
                 case Level2UpdateEvent -> outsiderAlertHandler.level2Update(JSONHelper.toLevel2Data(message.getO()));
                 case AccountPositionEvent -> {
                     AccountPositionEvent accountPositionEvent = JSONHelper.toObject(message.getO(), AccountPositionEvent.class);
-
                     if (accountPositionEvent.getProductSymbol().equals("USDT") && accountPositionEvent.getAmount() < 3000){
+                        account.setUsdtBalance(accountPositionEvent.getAmount());
                         reportService.createLowCapitalAlert(account.getAccountName(), accountPositionEvent.getProductSymbol(), accountPositionEvent.getAmount());
                     } else if (accountPositionEvent.getProductSymbol().equals("MAMI") && accountPositionEvent.getAmount() < 20000){
                         reportService.createLowCapitalAlert(account.getAccountName(), accountPositionEvent.getProductSymbol(), accountPositionEvent.getAmount());
                     }
-
                 }
                 case GetAccountPositions -> {
                     Type listType = new TypeToken<ArrayList<GetAccountPositionsAnswer>>() {}.getType();
                     ArrayList<GetAccountPositionsAnswer> update = JSONHelper.toObject(message.getO(),listType);
                     GetAccountPositionsAnswer usdtPosition = update.stream().filter(s->s.getProductSymbol().equals("USDT")).findFirst().orElse(null);
-                    if (usdtPosition != null && usdtPosition.getNotionalValue() < 3000){
-                        reportService.createLowCapitalAlert(account.getAccountName(), usdtPosition.getProductSymbol(), usdtPosition.getAmount());
-                    }
-                    GetAccountPositionsAnswer mamiPosition = update.stream().filter(s->s.getProductSymbol().equals("MAMI")).findFirst().orElse(null);
-                    if (mamiPosition != null && mamiPosition.getNotionalValue() < 20000){
-                        reportService.createLowCapitalAlert(account.getAccountName(), mamiPosition.getProductSymbol(), mamiPosition.getAmount());
+                    if (usdtPosition != null){
+                        account.setUsdtBalance(usdtPosition.getAmount());
                     }
                 }
                 case SubscribeLevel2, SubscribeTrades, CancelOrderRejectEvent -> {}

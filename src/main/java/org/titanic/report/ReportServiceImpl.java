@@ -38,13 +38,9 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void createAndExecuteReport(StrategyExecutionEntity strategyExecution) {
         try {
-            List<TransactionEntity> transactions = transactionReader.getAllTransactionsByStrategyExecution(strategyExecution.getId());
             StringBuilder response = new StringBuilder(Emoji.SPEAK_NO_EVIL_MONKEY +"Execution Report \n");
-            response.append(String.format("%5s %5s %10s %5s %10s %5s %10s %5s %10s %5s %10s %5s %5s \n", "Time", "|", "Symbol", "|", "Volume", "|", "Price", "|", "Side", "|","Account","|","Status"));
             response.append("\n-------------------------------------\n");
-            for (TransactionEntity transaction : transactions) {
-                response.append(String.format("%5s %5s %10s %5s %.0f %5s %10f %5s %10s %5s %10s %5s %5s \n", transaction.getTimestamp().toString(), "|", transaction.getSymbol(), "|", transaction.getVolume(), "|", transaction.getPrice(), "|", transaction.getSide().toString(), "|",transaction.getAccount().getAccountName(),"|",transaction.getStatus()));
-            }
+            response.append("ID: "+strategyExecution.getStrategy().getId()+" Symbol: "+strategyExecution.getStrategy().getSymbol()+" is done for today\n");
             telegramService.sendMessageToChannel(response.toString());
         } catch (TelegramApiException e) {
             e.printStackTrace();
