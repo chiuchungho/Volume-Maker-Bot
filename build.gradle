@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'idea'
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.freefair.lombok' version '6.3.0'
+}
+
+group 'org.titanic'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+
+    implementation platform('org.springframework.boot:spring-boot-dependencies:2.6.2')
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.hibernate:hibernate-core:5.5.5.Final'
+    implementation 'org.postgresql:postgresql:42.2.23'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation 'org.liquibase:liquibase-core:4.4.3'
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'org.telegram:telegrambots:5.6.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,16 @@
+version: '3'
+volumes:
+  titanicdbvolume:
+
+services:
+  titanicdb:
+    image: postgres
+    volumes:
+      - titanicdbvolume:/var/lib/postgresql/titanic
+    container_name: titanicdb
+    ports:
+      - 9000:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: titanicdb

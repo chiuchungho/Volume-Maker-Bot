@@ -1,0 +1,37 @@
+version: '3'
+volumes:
+  titanicdbvolume:
+
+services:
+  titanic-database:
+    image: postgres
+    volumes:
+      - titanicdbvolume:/var/lib/postgresql/titanic
+    container_name: titanic-database
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: titanicdb
+    networks:
+      - titanic-network
+  titanic-service:
+    depends_on:
+      - titanic-database
+    container_name: titanic-service
+    build:
+      context: titanic
+      dockerfile: Dockerfile
+    image: titanic:latest
+    ports:
+      - 18888:8888
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://titanic-database:5432/titanicdb
+      - TELEGRAM.APPROVED_TELEGRAM_USER = kater_findus,HannoChan,CryptoManBean01
+    networks:
+      - titanic-network
+
+networks:
+  titanic-network:
+    driver: bridge
