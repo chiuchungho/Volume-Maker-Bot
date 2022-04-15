@@ -1,18 +1,24 @@
 package org.titanic.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.titanic.db.entity.StrategyEntity;
 import org.titanic.db.gateway.StrategyReader;
-import org.titanic.db.gateway.StrategyWriter;
-import org.titanic.telegram.util.MessageHelper;
+import org.titanic.telegram.TelegramService;
+import org.titanic.telegram.listener.TelegramBotListener;
+import org.titanic.telegram.util.SendHelper;
 import org.titanic.telegram.util.UserState;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Hanno Skowronek, Chung Ho Chiu
@@ -21,10 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramCommandHandlerService implements TelegramCommandHandler{
+
     private final StrategyReader strategyReader;
 
+    @SneakyThrows
     @NotNull
-    public SendMessage handleListAllActive(Message message, String username){
+    public void handleListAllActive(Message message, String username, TelegramBotListener telegramBotListener){
         List<StrategyEntity> strategies = strategyReader.getAllActiveStrategies();
         StringBuilder response;
         if (strategies.size() != 0) {
@@ -38,34 +46,58 @@ public class TelegramCommandHandlerService implements TelegramCommandHandler{
                         strategy.getId(), "|", strategy.getTelegramUsername(), "|", strategy.getSymbol(), "|", strategy.getVolume(), "|", strategy.getCreated().toString().substring(0,19) , "|", strategy.getPriceMin() , "|", strategy.getPriceMax()));
             }
             response.append("\n-------------------------------------");
-            return MessageHelper.sendMessage(message, response.toString());
+            telegramBotListener.execute(SendHelper.sendMessage(message, response.toString()));
         }
         UserState.removeUserState(username);
-        return MessageHelper.sendMessage(message, "no active strategy");
+        telegramBotListener.execute(SendHelper.sendMessage(message, "no active strategy"));
     }
 
+    @SneakyThrows
     @NotNull
-    public SendMessage handleCreate(Message message, String username){
+    public void handleCreate(Message message, String username, TelegramBotListener telegramBotListener){
         UserState.setUserState(username, UserState.INPUT_SYMBOL_STATE);
-        return MessageHelper.sendReplyMessage(message,"Please enter trading symbol (for example: MAMIUSDT)");
+        telegramBotListener.execute(SendHelper.sendReplyMessage(message,"Please enter trading symbol (for example: MAMIUSDT)"));
     }
 
+    @SneakyThrows
     @NotNull
-    public SendMessage handleRemoveUserState(Message message, String username){
+    public void handleRemoveUserState(Message message, String username, TelegramBotListener telegramBotListener){
         UserState.removeUserState(username);
-        return MessageHelper.sendReplyMessage(message,"Stopped current input");
+        telegramBotListener.execute(SendHelper.sendReplyMessage(message,"Stopped current input"));
     }
 
+    @SneakyThrows
     @NotNull
-    public SendMessage handleConfirmStopAllState(Message message, String username){
+    public void handleConfirmStopAllState(Message message, String username, TelegramBotListener telegramBotListener){
         UserState.setUserState(username, UserState.INPUT_CONFIRM_STOP_ALL_STATE);
-        return MessageHelper.sendReplyMessage(message,"Please type *CONFIRM* to stop all bot");
+        telegramBotListener.execute(SendHelper.sendReplyMessage(message,"Please type *CONFIRM* to stop all bot"));
     }
 
+    @SneakyThrows
     @NotNull
-    public SendMessage handleStopByIDState(Message message, String username){
+    public void handleStopByIDState(Message message, String username, TelegramBotListener telegramBotListener){
         UserState.setUserState(username, UserState.INPUT_STOP_BY_ID_STATE);
-        return MessageHelper.sendReplyMessage(message,"Please input ID to stop strategy \n (ID from /list_all_active)");
+        telegramBotListener.execute(SendHelper.sendReplyMessage(message,"Please input ID to stop strategy \n (ID from /list_all_active)"));
+    }
+
+    @SneakyThrows
+    @NotNull
+    public void handleListTodayTransactionsByID(Message message, String username, TelegramBotListener telegramBotListener){
+        int id;
+        try {
+            id = Integer.parseInt(message.getText());
+            Optional<StrategyEntity> strategy = strategyReader.getById(id);
+            if (strategy.isPresent()) {
+
+
+                InputFile file = new InputFile();
+                telegramBotListener.execute(SendHelper.sendDocument(message, "", file));
+            }
+            telegramBotListener.execute(SendHelper.sendMessage(message, "Invalid input: strategy ID="+message.getText()+" does not exist.\nPlease input again (ID from /list_all_active)"));
+        }
+        catch (NumberFormatException e) {
+            telegramBotListener.execute(SendHelper.sendReplyMessage(message, "Invalid input: " + message.getText() + "\nPlease enter integer (e.g. 1, 2, 3) (ID from /list_all_active)"));
+        }
     }
 
 }

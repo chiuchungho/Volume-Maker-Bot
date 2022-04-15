@@ -1,12 +1,14 @@
 package org.titanic.telegram.util;
 
 
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 /**
- * @author Hanno Skowronek, Chung Ho Chiu
+ * @author Chung Ho Chiu
  */
-public final class MessageHelper {
+public final class SendHelper {
 
     public static SendMessage sendMessage(Message receivedMessage, String text){
         SendMessage sendMessage = new SendMessage();
@@ -41,6 +43,14 @@ public final class MessageHelper {
 //                .replace("*", "\\*")
                 .replace("[", "\\[")
                 .replace("`", "\\`");
+    }
+
+    public static SendDocument sendDocument(Message receivedMessage, String text, InputFile document){
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(receivedMessage.getChatId().toString());
+        sendDocument.setDocument(document);
+        sendDocument.setCaption(text);
+        return sendDocument;
     }
 
 }

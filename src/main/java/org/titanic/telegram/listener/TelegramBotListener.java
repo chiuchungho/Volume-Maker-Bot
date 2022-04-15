@@ -6,7 +6,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.titanic.telegram.handler.TelegramMessageHandler;
-import org.titanic.telegram.util.MessageHelper;
+import org.titanic.telegram.util.SendHelper;
 import org.titanic.telegram.util.UserState;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class TelegramBotListener extends TelegramLongPollingBot {
                     " User State: "+UserState.getUserState(update.getMessage().getFrom().getUserName()));
             if(telegramMessageHandler.checkAuthorizeByUsername(update, approvedTelegramUser)){
                 try {
-                    execute(telegramMessageHandler.handleIncomingMessage(update.getMessage()));
+                    telegramMessageHandler.handleIncomingMessage(update.getMessage(), this);
                 } catch (Exception e) {
                     log.error("incoming message: " + update.getMessage().toString()+ "\n"+
                             "user: " + update.getMessage().getFrom().getUserName()+ "\n"+
@@ -57,7 +57,7 @@ public class TelegramBotListener extends TelegramLongPollingBot {
                 }
             }else{
                 try {
-                    execute(MessageHelper.sendReplyMessage(update.getMessage(),"unauthorized user"));
+                    execute(SendHelper.sendReplyMessage(update.getMessage(),"unauthorized user"));
                 } catch (TelegramApiException e) {
                     log.error("failed to execute sendReplyMessage for unauthorized user: ",e);
                 }

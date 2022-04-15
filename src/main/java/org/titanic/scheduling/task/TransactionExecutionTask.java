@@ -24,8 +24,6 @@ public class TransactionExecutionTask extends TimerTask {
 
     private long transactionId;
 
-    private final AccountHandler accountHandler;
-
     @Override
     public void run() {
         TransactionEntity transaction = SpringContextUtils.getBean(TransactionReader.class).getTransaction(transactionId).orElseThrow();
@@ -52,6 +50,7 @@ public class TransactionExecutionTask extends TimerTask {
 
     private boolean checkIfEnoughAccountBalanceForBothSide(TransactionEntity transaction){
         double requiredBalance = transaction.getVolume() * transaction.getPrice();
+        AccountHandler accountHandler = SpringContextUtils.getBean(AccountHandler.class);
         List<CryptosxAccount> accounts = accountHandler.getAccounts();
         for (CryptosxAccount acc : accounts) {
             if (acc.getUsdtBalance() < requiredBalance){

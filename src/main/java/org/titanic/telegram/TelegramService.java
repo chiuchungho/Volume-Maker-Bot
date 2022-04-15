@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.titanic.telegram.handler.TelegramMessageHandler;
 import org.titanic.telegram.listener.TelegramBotListener;
-import org.titanic.telegram.util.MessageHelper;
+import org.titanic.telegram.util.SendHelper;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -33,7 +33,7 @@ public class TelegramService {
 
     private TelegramBotsApi telegramBotsApi;
 
-    private TelegramBotListener telegramBotListener;
+    private static TelegramBotListener telegramBotListener;
 
     private final TelegramMessageHandler telegramMessageHandler;
 
@@ -51,6 +51,8 @@ public class TelegramService {
     }
 
     public void sendMessageToChannel(String message) throws TelegramApiException {
-        telegramBotListener.execute(MessageHelper.sendMessageToChannel(message, channelId));
+        telegramBotListener.execute(SendHelper.sendMessageToChannel(message, channelId));
     }
+
+    public TelegramBotListener getTelegramBotListener(){ return telegramBotListener; }
 }

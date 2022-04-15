@@ -2,21 +2,22 @@ package org.titanic.telegram.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.titanic.telegram.listener.TelegramBotListener;
 
 /**
  * @author Hanno Skowronek, Chung Ho Chiu
  */
 interface TelegramUserStateHandler {
-    SendMessage handleInputConfirmStopByIdState(Message message, String username);
-    SendMessage handleInputStopByIdState(Message message, String username);
-    SendMessage handleInputConfirmStopAllState(Message message, String username);
-    SendMessage handleInputConfirmCreateState(Message message, String username);
-    SendMessage handleInputDurationHourMaxState(Message message, String username);
-    SendMessage handleInputDurationHourMinState(Message message, String username);
-    SendMessage handleInputPriceMinState(Message message, String username);
-    SendMessage handleInputPriceMaxState(Message message, String username);
-    SendMessage handleInputVolumeState(Message message, String username);
-    SendMessage handleInputSymbolState(Message message, String username);
-    SendMessage handleInputNumberOfTradesMinState(Message message, String username);
-    SendMessage handleInputNumberOfTradesMaxState(Message message, String username);
+    void handleInputConfirmStopByIdState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputStopByIdState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputConfirmStopAllState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputConfirmCreateState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputDurationHourMaxState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputDurationHourMinState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputPriceMinState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputPriceMaxState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputVolumeState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputSymbolState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputNumberOfTradesMinState(Message message, String username, TelegramBotListener telegramBotListener);
+    void handleInputNumberOfTradesMaxState(Message message, String username, TelegramBotListener telegramBotListener);
 }
