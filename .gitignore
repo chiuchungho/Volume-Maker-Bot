@@ -4,8 +4,8 @@
 /build/
 .vscode/
 
-./*/cryptosx.properties
-./*/telegram.properties
+src/main/resources/cryptosx.properties
+src/main/resources/telegram.properties
 
 # Ignore Gradle GUI config
 gradle-app.setting
