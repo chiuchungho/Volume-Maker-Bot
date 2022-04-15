@@ -34,4 +34,7 @@ public class StrategyReaderService implements StrategyReader {
         return strategyJpaRepository.findById(strategyId);
     }
 
+    @Override
+    public List<StrategyEntity> getAllActiveStrategiesBySymbol(String symbol) {return strategyJpaRepository.findAllBySymbolAndActiveIsTrue(symbol); }
+
 }

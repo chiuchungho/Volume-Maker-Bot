@@ -153,7 +153,7 @@ public class StrategySchedulerService implements StrategyScheduler {
 
         StrategyExecutionEntity strategyExecution = createAndSaveStrategyExecution(strategy);
 
-        int numberOfTrades = this.nextInt(MIN_NUMBER_OF_TRADES, MAX_NUMBER_OF_TRADES);
+        int numberOfTrades = this.nextInt(strategy.getNumberOfTradesMin(), strategy.getNumberOfTradesMax());
         int[] volumeArray = calcRandomIntegerVolumeArray(numberOfTrades, (int) strategy.getVolume());
 
 

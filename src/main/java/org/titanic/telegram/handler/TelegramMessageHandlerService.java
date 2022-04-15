@@ -49,6 +49,8 @@ public class TelegramMessageHandlerService implements TelegramMessageHandler {
             case UserState.INPUT_DURATION_HOUR_MAX_STATE -> telegramUserStateHandler.handleInputDurationHourMaxState(message, username);
             case UserState.INPUT_PRICE_MIN_STATE -> telegramUserStateHandler.handleInputPriceMinState(message, username);
             case UserState.INPUT_PRICE_MAX_STATE -> telegramUserStateHandler.handleInputPriceMaxState(message, username);
+            case UserState.INPUT_NUMBER_OF_TRADES_MIN_STATE -> telegramUserStateHandler.handleInputNumberOfTradesMinState(message, username);
+            case UserState.INPUT_NUMBER_OF_TRADES_MAX_STATE -> telegramUserStateHandler.handleInputNumberOfTradesMaxState(message, username);
             case UserState.INPUT_CONFIRM_CREATE_STATE -> telegramUserStateHandler.handleInputConfirmCreateState(message, username);
             // "/stop_all"
             case UserState.INPUT_CONFIRM_STOP_ALL_STATE -> telegramUserStateHandler.handleInputConfirmStopAllState(message, username);

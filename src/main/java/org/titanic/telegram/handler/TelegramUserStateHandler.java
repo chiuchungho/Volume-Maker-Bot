@@ -17,4 +17,6 @@ interface TelegramUserStateHandler {
     SendMessage handleInputPriceMaxState(Message message, String username);
     SendMessage handleInputVolumeState(Message message, String username);
     SendMessage handleInputSymbolState(Message message, String username);
+    SendMessage handleInputNumberOfTradesMinState(Message message, String username);
+    SendMessage handleInputNumberOfTradesMaxState(Message message, String username);
 }

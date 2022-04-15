@@ -28,10 +28,14 @@ public class TelegramCommandHandlerService implements TelegramCommandHandler{
         List<StrategyEntity> strategies = strategyReader.getAllActiveStrategies();
         StringBuilder response;
         if (strategies.size() != 0) {
-            response = new StringBuilder(String.format("%5s %5s %10s %5s %10s %5s %10s %5s %10s \n", "ID", "|", "User", "|", "Symbol", "|", "Volume", "|", "Time"));
+            response = new StringBuilder(String.format(
+                    "%5s %5s %10s %5s %10s %4s %5s %2s %10s %3s %10s %3s %10s \n",
+                    "ID", "|", "User", "|", "Symbol", "|", "Volume", "|", "Time", "|", "MinPrice", "|", "MaxPrice"));
             response.append("\n-------------------------------------");
             for (StrategyEntity strategy : strategies) {
-                response.append(String.format("\n%3d %5s %5s %2s %5s %2s %.0f %2s %5s", strategy.getId(), "|", strategy.getTelegramUsername(), "|", strategy.getSymbol(), "|", strategy.getVolume(), "|", strategy.getCreated().toString()));
+                response.append(String.format(
+                        "\n%3d %5s %5s %2s %5s %2s %.0f %2s %5s %2s %.2f %2s %.2f",
+                        strategy.getId(), "|", strategy.getTelegramUsername(), "|", strategy.getSymbol(), "|", strategy.getVolume(), "|", strategy.getCreated().toString().substring(0,19) , "|", strategy.getPriceMin() , "|", strategy.getPriceMax()));
             }
             response.append("\n-------------------------------------");
             return MessageHelper.sendMessage(message, response.toString());
@@ -55,13 +59,13 @@ public class TelegramCommandHandlerService implements TelegramCommandHandler{
     @NotNull
     public SendMessage handleConfirmStopAllState(Message message, String username){
         UserState.setUserState(username, UserState.INPUT_CONFIRM_STOP_ALL_STATE);
-        return MessageHelper.sendReplyMessage(message,"Please type \"CONFIRM\" to stop all bot");
+        return MessageHelper.sendReplyMessage(message,"Please type *CONFIRM* to stop all bot");
     }
 
     @NotNull
     public SendMessage handleStopByIDState(Message message, String username){
         UserState.setUserState(username, UserState.INPUT_STOP_BY_ID_STATE);
-        return MessageHelper.sendReplyMessage(message,"Please input ID to stop strategy \n (ID from /ListAllActive)");
+        return MessageHelper.sendReplyMessage(message,"Please input ID to stop strategy \n (ID from /list_all_active)");
     }
 
 }

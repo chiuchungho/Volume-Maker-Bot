@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.titanic.telegram.handler.TelegramMessageHandler;
 import org.titanic.telegram.util.MessageHelper;
+import org.titanic.telegram.util.UserState;
 
 import java.util.List;
 
@@ -44,7 +45,8 @@ public class TelegramBotListener extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if(update.hasMessage() && update.getMessage().hasText()){
             log.info("Incoming Message: " +  update.getMessage().getText() +
-                    " By User: " + update.getMessage().getFrom().getUserName());
+                    " By User: " + update.getMessage().getFrom().getUserName()+
+                    " User State: "+UserState.getUserState(update.getMessage().getFrom().getUserName()));
             if(telegramMessageHandler.checkAuthorizeByUsername(update, approvedTelegramUser)){
                 try {
                     execute(telegramMessageHandler.handleIncomingMessage(update.getMessage()));

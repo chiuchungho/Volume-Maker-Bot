@@ -55,4 +55,10 @@ public class StrategyEntity {
 
     @Column(nullable = false)
     private boolean active;
+
+    @Column(nullable = false)
+    private int numberOfTradesMin;
+
+    @Column(nullable = false)
+    private int numberOfTradesMax;
 }

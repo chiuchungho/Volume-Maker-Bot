@@ -15,4 +15,6 @@ public interface StrategyReader {
     List<StrategyEntity> getAllActiveStrategies();
 
     Optional<StrategyEntity> getById(int strategyId);
+
+    public List<StrategyEntity> getAllActiveStrategiesBySymbol(String symbol);
 }

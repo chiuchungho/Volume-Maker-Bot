@@ -15,7 +15,9 @@ public class UserState {
     public static final int INPUT_DURATION_HOUR_MAX_STATE = 4;
     public static final int INPUT_PRICE_MIN_STATE = 5;
     public static final int INPUT_PRICE_MAX_STATE = 6;
-    public static final int INPUT_CONFIRM_CREATE_STATE = 7;
+    public static final int INPUT_NUMBER_OF_TRADES_MIN_STATE = 7;
+    public static final int INPUT_NUMBER_OF_TRADES_MAX_STATE = 8;
+    public static final int INPUT_CONFIRM_CREATE_STATE = 9;
 
     public static final int INPUT_CONFIRM_STOP_ALL_STATE = 100;
     public static final int INPUT_STOP_BY_ID_STATE = 101;
@@ -135,6 +137,38 @@ public class UserState {
         if(map.get(username) != null){
             UserData userData = map.get(username);
             return userData.getVolume();
+        }
+        return 0;
+    }
+
+    public static void setNumberOfTradesMin(String username, int numberOfTradesMin){
+        if(map.get(username) != null){
+            UserData userData = map.get(username);
+            userData.setNumberOfTradesMin(numberOfTradesMin);
+            map.put(username, userData);
+        }
+    }
+
+    public static int getNumberOfTradesMin(String username){
+        if(map.get(username) != null){
+            UserData userData = map.get(username);
+            return userData.getNumberOfTradesMin();
+        }
+        return 0;
+    }
+
+    public static void setNumberOfTradesMax(String username, int numberOfTradesMax){
+        if(map.get(username) != null){
+            UserData userData = map.get(username);
+            userData.setNumberOfTradesMax(numberOfTradesMax);
+            map.put(username, userData);
+        }
+    }
+
+    public static int getNumberOfTradesMax(String username){
+        if(map.get(username) != null){
+            UserData userData = map.get(username);
+            return userData.getNumberOfTradesMax();
         }
         return 0;
     }

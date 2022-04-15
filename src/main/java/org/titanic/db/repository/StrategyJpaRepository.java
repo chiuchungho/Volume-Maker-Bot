@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.titanic.db.entity.StrategyEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -14,4 +15,7 @@ import java.util.UUID;
 public interface StrategyJpaRepository extends JpaRepository<StrategyEntity, Integer> {
 
     List<StrategyEntity> findAllByActiveIsTrue();
+
+    List<StrategyEntity> findAllBySymbolAndActiveIsTrue(String symbol);
 }
+

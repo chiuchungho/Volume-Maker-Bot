@@ -12,5 +12,7 @@ public class UserData {
     private int durationHourMax;
     private double priceMin;
     private double priceMax;
+    private int numberOfTradesMin;
+    private int numberOfTradesMax;
     private int stopById;
 }
