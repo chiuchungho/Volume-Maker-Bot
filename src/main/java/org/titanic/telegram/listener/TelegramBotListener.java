@@ -52,7 +52,8 @@ public class TelegramBotListener extends TelegramLongPollingBot {
                     telegramMessageHandler.handleIncomingMessage(update.getMessage(), this);
                 } catch (Exception e) {
                     log.error("incoming message: " + update.getMessage().toString()+ "\n"+
-                            "user: " + update.getMessage().getFrom().getUserName()+ "\n"+
+                            "User: " + update.getMessage().getFrom().getUserName()+
+                            " User State: "+ +UserState.getUserState(update.getMessage().getFrom().getUserName())+ "\n" +
                             "failed to handleIncomingMessage: " + e);
                 }
             }else{

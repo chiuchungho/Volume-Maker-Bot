@@ -5,6 +5,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
+import java.io.File;
+
 /**
  * @author Chung Ho Chiu
  */
@@ -45,10 +48,21 @@ public final class SendHelper {
                 .replace("`", "\\`");
     }
 
-    public static SendDocument sendDocument(Message receivedMessage, String text, InputFile document){
+    public static SendDocument sendDocumentToChannel(String channelId, String text, InputFile document){
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(channelId);
+        sendDocument.setDocument(document);
+        sendDocument.setCaption(text);
+        return sendDocument;
+    }
+
+    public static SendDocument sendDocument(Message receivedMessage, String text, File file){
+        InputFile inputFile = new InputFile();
+        inputFile.setMedia(file);
+
         SendDocument sendDocument = new SendDocument();
         sendDocument.setChatId(receivedMessage.getChatId().toString());
-        sendDocument.setDocument(document);
+        sendDocument.setDocument(inputFile);
         sendDocument.setCaption(text);
         return sendDocument;
     }

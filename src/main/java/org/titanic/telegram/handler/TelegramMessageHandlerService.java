@@ -59,6 +59,8 @@ public class TelegramMessageHandlerService implements TelegramMessageHandler {
             // "/stop_by_id"
             case UserState.INPUT_STOP_BY_ID_STATE -> telegramUserStateHandler.handleInputStopByIdState(message, username, telegramBotListener);
             case UserState.INPUT_CONFIRM_STOP_BY_ID_STATE -> telegramUserStateHandler.handleInputConfirmStopByIdState(message, username, telegramBotListener);
+            // "/list_today_transactions_by_id"
+            case UserState.INPUT_LIST_TRANSACTION_BY_ID_STATE ->  telegramUserStateHandler.handleInputListTransactionByIDState(message, username, telegramBotListener);
             default -> SendHelper.sendReplyMessage(message, "unknown message or command - please type /create to start the bot");
         };
     }

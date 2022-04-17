@@ -22,6 +22,7 @@ public class UserState {
     public static final int INPUT_CONFIRM_STOP_ALL_STATE = 100;
     public static final int INPUT_STOP_BY_ID_STATE = 101;
     public static final int INPUT_CONFIRM_STOP_BY_ID_STATE = 102;
+    public static final int INPUT_LIST_TRANSACTION_BY_ID_STATE = 103;
 
     public static ConcurrentHashMap<String, UserData> map = new ConcurrentHashMap<>();
 

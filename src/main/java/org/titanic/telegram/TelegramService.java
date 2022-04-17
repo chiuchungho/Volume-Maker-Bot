@@ -54,5 +54,6 @@ public class TelegramService {
         telegramBotListener.execute(SendHelper.sendMessageToChannel(message, channelId));
     }
 
+
     public TelegramBotListener getTelegramBotListener(){ return telegramBotListener; }
 }
