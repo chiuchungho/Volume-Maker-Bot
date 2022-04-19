@@ -31,7 +31,7 @@ public final class SendHelper {
         return sendMessage;
     }
 
-    public static SendMessage sendMessageToChannel(String text, String channelId){
+    public static SendMessage sendMessageToChannel(String channelId, String text){
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(channelId);
@@ -48,10 +48,13 @@ public final class SendHelper {
                 .replace("`", "\\`");
     }
 
-    public static SendDocument sendDocumentToChannel(String channelId, String text, InputFile document){
+    public static SendDocument sendDocumentToChannel(String channelId, String text, File file){
+        InputFile inputFile = new InputFile();
+        inputFile.setMedia(file);
+
         SendDocument sendDocument = new SendDocument();
         sendDocument.setChatId(channelId);
-        sendDocument.setDocument(document);
+        sendDocument.setDocument(inputFile);
         sendDocument.setCaption(text);
         return sendDocument;
     }

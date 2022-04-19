@@ -12,6 +12,7 @@ import org.titanic.telegram.listener.TelegramBotListener;
 import org.titanic.telegram.util.SendHelper;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -51,9 +52,11 @@ public class TelegramService {
     }
 
     public void sendMessageToChannel(String message) throws TelegramApiException {
-        telegramBotListener.execute(SendHelper.sendMessageToChannel(message, channelId));
+        telegramBotListener.execute(SendHelper.sendMessageToChannel(channelId, message));
     }
 
+    public void sendDocumentToChannel(String message, File file) throws TelegramApiException {
+        telegramBotListener.execute(SendHelper.sendDocumentToChannel(channelId, message, file));
+    }
 
-    public TelegramBotListener getTelegramBotListener(){ return telegramBotListener; }
 }

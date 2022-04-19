@@ -3,6 +3,7 @@ package org.titanic.telegram.handler;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import org.titanic.db.entity.StrategyEntity;
 import org.titanic.db.entity.TransactionEntity;
 import org.titanic.db.gateway.StrategyReader;
 import org.titanic.db.gateway.TransactionReader;
+import org.titanic.report.ReportService;
 import org.titanic.scheduling.StrategyScheduler;
 import org.titanic.telegram.TelegramService;
 import org.titanic.telegram.listener.TelegramBotListener;
@@ -21,6 +23,7 @@ import org.titanic.util.MathHelper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,7 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
     private final StrategyReader strategyReader;
     private final StrategyScheduler strategyScheduler;
     private final TransactionReader transactionReader;
+    private final ReportService reportService;
 
     @SneakyThrows
     @NotNull
@@ -327,17 +331,14 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
         try {
             id = Integer.parseInt(message.getText());
             Optional<StrategyEntity> strategy = strategyReader.getById(id);
-            if (strategy.isPresent()) {
+            if (strategy.isPresent() && strategy.get().isActive()) {
                 List<TransactionEntity> transactionEntities = transactionReader.getAllTransactionsFromTodayBySymbol(strategy.get().getSymbol());
-                log.info(transactionEntities.toString());
-                File file = new File("./output.txt");
-                FileOutputStream fos = new FileOutputStream(file);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(transactionEntities);
-                oos.close();
-
-                telegramBotListener.execute(SendHelper.sendDocument(message, "", file));
-                UserState.removeUserState(username);
+                if (!transactionEntities.isEmpty()) {
+                    telegramBotListener.execute(SendHelper.sendDocument(message, "", reportService.generateTransactionReport(transactionEntities)));
+                    UserState.removeUserState(username);
+                    return;
+                }
+                telegramBotListener.execute(SendHelper.sendMessage(message, "No transaction for this strategy scheduled for today"));
                 return;
             }
             telegramBotListener.execute(SendHelper.sendMessage(message, "Strategy ID: "+message.getText()+"Not found. Please input Strategy ID again (ID from /list_all_active)"));
@@ -348,4 +349,5 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
             return;
         }
     }
+
 }
