@@ -1,20 +1,17 @@
 package org.titanic.report;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.titanic.db.entity.StrategyExecutionEntity;
 import org.titanic.db.entity.TransactionEntity;
 import org.titanic.db.gateway.TransactionReader;
 import org.titanic.enums.Side;
+import org.titanic.report.util.ReportUtil;
 import org.titanic.telegram.TelegramService;
 import org.titanic.telegram.util.Emoji;
 
-import java.io.File;
-import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -47,7 +44,7 @@ public class ReportServiceImpl implements ReportService {
             response.append("ID: "+strategyExecution.getStrategy().getId()+" Symbol: "+strategyExecution.getStrategy().getSymbol()+" is done for today\n");
 
             List<TransactionEntity> transactionEntities = transactionReader.getAllTransactionsFromTodayBySymbol(strategyExecution.getStrategy().getSymbol());
-            telegramService.sendDocumentToChannel(response.toString(), generateTransactionReport(transactionEntities));
+            telegramService.sendDocumentToChannel(response.toString(), ReportUtil.GenerateTransactionReport(transactionEntities));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -108,29 +105,4 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-    @Override
-    @SneakyThrows
-    public File generateTransactionReport(List<TransactionEntity> transactionEntities){
-        StringBuilder sb = new StringBuilder(String.format(
-                "%20s %2s %10s %2s %10s %2s %30s %2s %5s %2s %5s \n",
-                "Time", "|", "Status", "|", "Side", "|", "Account", "|", "Price", "|", "Volume"));
-
-        for (TransactionEntity transactionEntity : transactionEntities) {
-            sb.append(String.format(
-                    "%20s %2s %10s %2s %10s %2s %30s %2s %5.2f %2s %5.2f",
-                    transactionEntity.getTimestamp().toString().substring(0,19), "|",
-                    transactionEntity.getStatus(), "|",
-                    transactionEntity.getSide() , "|",
-                    transactionEntity.getAccount().getAccountName(),  "|",
-                    transactionEntity.getPrice() ,  "|",
-                    transactionEntity.getVolume()
-            ));
-        }
-
-//        File file = File.createTempFile("./transaction-report-"+ transactionEntities.get(0).getSymbol(), ".txt");
-//        file.deleteOnExit();
-        File file = new File("./transaction-report-"+ transactionEntities.get(0).getSymbol()+".txt");
-        FileUtils.writeStringToFile(file, sb.toString(), Charset.forName("UTF-8"));
-        return file;
-    }
 }

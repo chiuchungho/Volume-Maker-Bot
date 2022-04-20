@@ -19,6 +19,4 @@ public interface ReportService {
     void createOutsiderOrderAlert(String symbol, double volume, double price, Side side, int actionType);
 
     void createOutsiderTradeAlert(String symbol, double volume, double price, Side side);
-
-    public File generateTransactionReport(List<TransactionEntity> transactionEntities);
 }

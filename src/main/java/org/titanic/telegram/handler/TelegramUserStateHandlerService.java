@@ -13,6 +13,7 @@ import org.titanic.db.entity.TransactionEntity;
 import org.titanic.db.gateway.StrategyReader;
 import org.titanic.db.gateway.TransactionReader;
 import org.titanic.report.ReportService;
+import org.titanic.report.util.ReportUtil;
 import org.titanic.scheduling.StrategyScheduler;
 import org.titanic.telegram.TelegramService;
 import org.titanic.telegram.listener.TelegramBotListener;
@@ -38,7 +39,6 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
     private final StrategyReader strategyReader;
     private final StrategyScheduler strategyScheduler;
     private final TransactionReader transactionReader;
-    private final ReportService reportService;
 
     @SneakyThrows
     @NotNull
@@ -334,7 +334,7 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
             if (strategy.isPresent() && strategy.get().isActive()) {
                 List<TransactionEntity> transactionEntities = transactionReader.getAllTransactionsFromTodayBySymbol(strategy.get().getSymbol());
                 if (!transactionEntities.isEmpty()) {
-                    telegramBotListener.execute(SendHelper.sendDocument(message, "", reportService.generateTransactionReport(transactionEntities)));
+                    telegramBotListener.execute(SendHelper.sendDocument(message, "", ReportUtil.GenerateTransactionReport(transactionEntities)));
                     UserState.removeUserState(username);
                     return;
                 }
