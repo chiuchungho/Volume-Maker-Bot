@@ -8,6 +8,7 @@ import org.titanic.cryptosx.gateway.ExchangeHandler;
 import org.titanic.cryptosx.gateway.OutsiderAlertHandler;
 import org.titanic.db.entity.TransactionEntity;
 import org.titanic.db.gateway.TransactionReader;
+import org.titanic.enums.Side;
 import org.titanic.enums.TransactionStatus;
 import org.titanic.db.gateway.TransactionWriter;
 import org.titanic.util.SpringContextUtils;
@@ -52,9 +53,21 @@ public class TransactionExecutionTask extends TimerTask {
         double requiredBalance = transaction.getVolume() * transaction.getPrice();
         AccountHandler accountHandler = SpringContextUtils.getBean(AccountHandler.class);
         List<CryptosxAccount> accounts = accountHandler.getAccounts();
+
         for (CryptosxAccount acc : accounts) {
-            if (acc.getUsdtBalance() < requiredBalance){
-                return false;
+            if (transaction.getSide() == Side.Buy) {
+                if (acc.getAccountName().equals(transaction.getAccount().getAccountName())){
+                    if (acc.getUsdtBalance() < requiredBalance){
+                        return false;
+                    }
+                }
+            }
+            if (transaction.getSide() == Side.Sell) {
+                if (!acc.getAccountName().equals(transaction.getAccount().getAccountName())){
+                    if (acc.getUsdtBalance() < requiredBalance){
+                        return false;
+                    }
+                }
             }
         }
         return true;

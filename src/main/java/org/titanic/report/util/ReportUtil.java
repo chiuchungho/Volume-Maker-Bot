@@ -12,25 +12,19 @@ public class ReportUtil {
 
     @SneakyThrows
     public static File GenerateTransactionReport(List<TransactionEntity> transactionEntities){
-        StringBuilder sb = new StringBuilder(String.format(
-                "%20s %2s %10s %2s %10s %2s %30s %2s %5s %2s %5s \n",
-                "Time", "|", "Status", "|", "Side", "|", "Account", "|", "Price", "|", "Volume"));
-
+        StringBuilder sb = new StringBuilder("Time,Status,Side,Account,Price,Volume\n");
         for (TransactionEntity transactionEntity : transactionEntities) {
-            sb.append(String.format(
-                    "%20s %2s %10s %2s %10s %2s %30s %2s %5.2f %2s %5.2f \n",
-                    transactionEntity.getTimestamp().toString().substring(0,19), "|",
-                    transactionEntity.getStatus(), "|",
-                    transactionEntity.getSide() , "|",
-                    transactionEntity.getAccount().getAccountName(),  "|",
-                    transactionEntity.getPrice() ,  "|",
-                    transactionEntity.getVolume()
-            ));
+            sb.append(transactionEntity.getTimestamp().toString().substring(0,19) +","+
+                    transactionEntity.getStatus() +","+
+                    transactionEntity.getSide() +","+
+                    transactionEntity.getAccount().getAccountName()+ ","+
+                    transactionEntity.getPrice() +  ","+
+                    transactionEntity.getVolume()+ "\n");
         }
 
 //        File file = File.createTempFile("./transaction-report-"+ transactionEntities.get(0).getSymbol(), ".txt");
 //        file.deleteOnExit();
-        File file = new File("./transaction-report-"+ transactionEntities.get(0).getSymbol()+".txt");
+        File file = new File("./transaction-report-"+ transactionEntities.get(0).getSymbol()+".csv");
         FileUtils.writeStringToFile(file, sb.toString(), Charset.forName("UTF-8"));
         return file;
     }

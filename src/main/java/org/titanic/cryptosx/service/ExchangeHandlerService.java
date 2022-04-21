@@ -48,7 +48,7 @@ public class ExchangeHandlerService implements ExchangeHandler {
     private final OutsiderAlertHandler outsiderAlertHandler;
     private final ReportService reportService;
 
-//    @PostConstruct
+    @PostConstruct
     @DependsOn({"AccountHandler", "TransactionCleanup"})
     private void init() {
         log.info("Initialising the ExchangeHandler and connecting to cryptosx..");

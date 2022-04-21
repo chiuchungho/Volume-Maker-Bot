@@ -47,6 +47,7 @@ public class CryptosxAccount extends Payload {
     private final transient String accountName;
 
     @Setter
+    @Getter
     private transient double usdtBalance = 0;
 
     @Setter

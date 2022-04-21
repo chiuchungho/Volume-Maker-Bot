@@ -43,7 +43,7 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
     @SneakyThrows
     @NotNull
     public void handleInputConfirmStopByIdState(Message message, String username, TelegramBotListener telegramBotListener) {
-        if(message.getText().equals("CONFIRM")){
+        if(message.getText().equalsIgnoreCase("CONFIRM")){
             log.info("debug id: "+ UserState.getStopById(username));
             strategyScheduler.deactivateStrategy(UserState.getStopById(username));
             String response = "Stopped strategy ID: "+UserState.getStopById(username);
@@ -80,7 +80,7 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
     @SneakyThrows
     @NotNull
     public void handleInputConfirmStopAllState(Message message, String username, TelegramBotListener telegramBotListener) {
-        if(message.getText().equals("CONFIRM")){
+        if(message.getText().equalsIgnoreCase("CONFIRM")){
             strategyScheduler.deactivateAllStrategies();
             UserState.removeUserState(username);
             telegramBotListener.execute(SendHelper.sendReplyMessage(message, "Stopped all bot"));
@@ -291,7 +291,7 @@ public class TelegramUserStateHandlerService implements TelegramUserStateHandler
     @SneakyThrows
     @NotNull
     public void handleInputConfirmCreateState(Message message, String username, TelegramBotListener telegramBotListener) {
-        if(message.getText().equals("CONFIRM")){
+        if(message.getText().equalsIgnoreCase("CONFIRM")){
 
             StrategyEntity s = new StrategyEntity();
             s.setCreated(Instant.now());
